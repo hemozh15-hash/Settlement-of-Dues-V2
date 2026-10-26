@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج صرف مستحقات الموظفين - RAVIN HR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root[data-theme="light"] {
+            --bg-color: #f4f6f9; --card-bg: #ffffff; --header-bg: #111111;
+            --border-color: #e2e8f0; --text-main: #1e293b; --text-muted: #64748b;
+            --table-hover: #f1f5f9; --store-bg: #f8fafc;
+        }
+        :root[data-theme="dark"] {
+            --bg-color: #0b0b0b; --card-bg: #141414; --header-bg: #111111;
+            --border-color: #262626; --text-main: #ffffff; --text-muted: #888888;
+            --table-hover: rgba(255,255,255,0.02); --store-bg: #1a1a1a;
+        }
+        :root { --accent-orange: #ff7700; --accent-hover: #ff9433; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: var(--header-bg); border-bottom: 3px solid var(--accent-orange); border-radius: 16px;
+            padding: 20px 35px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .header .header-titles h1 { font-size: 19px; color: var(--accent-orange); font-weight: 700; margin-bottom: 4px; }
+        .header .header-titles p { font-size: 12px; color: #a1a1aa; letter-spacing: 1px; font-weight: 600; }
+        .header-center-brand { text-align: center; }
+        .header-center-brand h2 { font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 3px; text-transform: uppercase; }
+        .header-center-brand h2 span { color: var(--accent-orange); }
+        .header-center-brand p { font-size: 10px; color: var(--text-muted); letter-spacing: 2px; font-weight: 600; }
+        .header-left-actions { display: flex; align-items: center; gap: 15px; }
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-color); color: #fff;
+            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .theme-toggle:hover { border-color: var(--accent-orange); color: var(--accent-orange); }
+        .brand-badge { border: 1px solid var(--accent-orange); background: rgba(255, 119, 0, 0.08); padding: 8px 15px; border-radius: 8px; text-align: center; }
+        .brand-badge span { display: block; font-size: 10px; color: var(--accent-orange); font-weight: 700; }
+        .brand-badge strong { font-size: 11px; color: #ffffff; }
+
+        .auth-card {
+            background: var(--card-bg); border: 2px solid var(--accent-orange); border-radius: 20px;
+            padding: 40px; max-width: 500px; margin: 60px auto; text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+        .auth-card i { font-size: 50px; color: var(--accent-orange); margin-bottom: 15px; }
+        .auth-card h2 { font-size: 20px; color: var(--text-main); margin-bottom: 10px; }
+        .auth-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+        .form-select-group { margin-bottom: 20px; text-align: right; }
+        .form-select-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
+        .form-control {
+            width: 100%; padding: 12px 15px; background: var(--store-bg); border: 1px solid var(--border-color);
+            border-radius: 10px; color: var(--text-main); font-size: 14px; outline: none; font-family: 'Cairo', sans-serif;
+        }
+        .form-control:focus { border-color: var(--accent-orange); }
+        .otp-notice {
+            background: rgba(255, 119, 0, 0.08); border-right: 4px solid var(--accent-orange); padding: 12px;
+            border-radius: 8px; font-size: 13px; color: #ff8f00; text-align: right; margin-bottom: 20px; line-height: 1.6;
+        }
+
+        .timer-banner {
+            background: var(--card-bg); border: 1px solid var(--accent-orange); border-radius: 12px;
+            padding: 15px 25px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); flex-wrap: wrap; gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .schedule-info { display: flex; gap: 20px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+        .schedule-info span { color: var(--accent-orange); font-weight: 700; }
+        .countdown-clock { color: var(--accent-orange); font-weight: 700; font-family: monospace; font-size: 15px; background: rgba(255,119,0,0.1); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,119,0,0.3); }
+
+        .closed-overlay { background: var(--card-bg); border: 2px solid var(--accent-orange); border-radius: 20px; padding: 60px 30px; text-align: center; margin-top: 40px; }
+        .closed-overlay i { font-size: 60px; color: var(--accent-orange); margin-bottom: 20px; }
+        .closed-overlay h2 { font-size: 26px; color: var(--text-main); margin-bottom: 15px; font-weight: 800; }
+        .closed-overlay p { font-size: 16px; color: var(--text-muted); line-height: 1.8; max-width: 700px; margin: 0 auto 20px auto; }
+        
+        .steps-bar { display: flex; justify-content: space-between; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px 25px; margin-bottom: 30px; }
+        .step-item { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-weight: 600; }
+        .step-item.active { color: var(--accent-orange); }
+        .step-item .step-num { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--border-color); font-size: 14px; color: var(--text-main); }
+        .step-item.active .step-num { background: var(--accent-orange); color: #000; font-weight: 700; }
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .section-title { font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; font-weight: 700; }
+        .section-title i { color: var(--accent-orange); }
+        .controls-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-select-all { background: var(--card-bg); border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-select-all:hover, .btn-select-all.selected { background: var(--accent-orange); color: #000; }
+        .stores-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; max-height: 350px; overflow-y: auto; padding: 5px; }
+        .store-card { background: var(--store-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .store-card:hover { border-color: var(--accent-orange); transform: translateY(-2px); }
+        .store-card.selected { background: rgba(255, 119, 0, 0.1); border-color: var(--accent-orange); }
+        .store-card i { font-size: 24px; color: var(--accent-orange); margin-bottom: 8px; display: block; }
+        .store-card span { font-weight: 700; font-size: 15px; color: var(--text-main); }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: right; }
+        th, td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--text-main); }
+        th { background: var(--store-bg); color: var(--text-muted); font-weight: 700; }
+        th i, td i { margin-left: 6px; color: var(--accent-orange); }
+        tr:hover td { background: var(--table-hover); }
+        .btn-primary { background: var(--accent-orange); color: #000; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .actions-footer { display: flex; justify-content: space-between; margin-top: 25px; }
+        .user-pill { background: rgba(255,119,0,0.1); border: 1px solid var(--accent-orange); color: var(--accent-orange); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+        
+        .excel-filter-select {
+            background: var(--bg-color); color: var(--text-main); border: 1px solid var(--border-color);
+            padding: 4px 8px; border-radius: 6px; font-size: 12px; font-family: 'Cairo', sans-serif; outline: none; cursor: pointer;
+            width: 100%; margin-top: 5px;
+        }
+        .excel-filter-select:focus { border-color: var(--accent-orange); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-titles">
+            <h1>نموذج صرف مستحقات الموظفين</h1>
+            <p>BRANCH SETTLEMENT REQUEST</p>
+        </div>
+        <div class="header-center-brand">
+            <h2>RAVIN <span>HR</span></h2>
+            <p>CLOTHING COMPANY</p>
+        </div>
+        <div class="header-left-actions">
+            <div id="userBadgeHeader" style="display: none;" class="user-pill">
+                <i class="fa-solid fa-user-shield"></i> <span id="displayUserEmail"></span>
+            </div>
+            <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="تغيير المظهر">
+                <i class="fa-solid fa-sun" id="themeIcon"></i>
+            </button>
+            <div class="brand-badge">
+                <span>★ IBRAHIM HASSAN ★</span>
+                <strong>HR GENERALIST</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة التحقق بالـ OTP -->
+    <div class="auth-card" id="authCard">
+        <i class="fa-solid fa-envelope-circle-check"></i>
+        <h2>تحقق أمان الفرع (OTP Security)</h2>
+        <p>اختر فرعك من القائمة أدناه لتلقي رمز التحقق على بريدك الإلكتروني:</p>
+        
+        <div class="form-select-group">
+            <label>اختر الفرع التابع له:</label>
+            <select id="authStoreSelect" class="form-control">
+                <option value="">-- حدد فرعك --</option>
+            </select>
+        </div>
+
+        <button class="btn-primary" id="sendOtpBtn" onclick="requestOtp()" style="width: 100%; justify-content: center; margin-bottom: 15px;">
+            إرسال رمز التحقق (OTP) <i class="fa-solid fa-paper-plane"></i>
+        </button>
+
+        <div id="otpInputBox" style="display: none; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+            <div class="otp-notice">
+                <i class="fa-solid fa-circle-info"></i> يرجى الدخول إلى بريد الأوتلوك الخاص بك لوصول الرقم، ثم أدخله أدناه:
+            </div>
+            <div class="form-select-group">
+                <label>أدخل رمز التحقق (6 أرقام):</label>
+                <input type="text" id="otpCodeInput" class="form-control" placeholder="123456" maxlength="6" style="text-align: center; letter-spacing: 5px; font-weight: 700; font-size: 18px;">
+            </div>
+            <button class="btn-primary" onclick="verifyOtp()" style="width: 100%; justify-content: center; background: #00c853; color: #fff;">
+                تأكيد الكود والدخول <i class="fa-solid fa-check-double"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- النظام الأساسي -->
+    <div id="mainSystemContainer" style="display: none;">
+        <div class="timer-banner" id="timerBanner">
+            <div class="schedule-info">
+                <div><i class="fa-solid fa-calendar-check" style="color:var(--accent-orange);"></i> الفتح: <span id="openingDisplay">--</span></div>
+                <div><i class="fa-solid fa-calendar-xmark" style="color:var(--accent-orange);"></i> الإغلاق: <span id="closingDisplay">--</span></div>
+            </div>
+            <div class="countdown-clock" id="countdownClock">النظام متاح للعمل</div>
+        </div>
+
+        <div id="portalMainContent">
+            <div class="steps-bar">
+                <div class="step-item active" id="indicator-1"><div class="step-num">01</div><span>اختيار الفرع</span></div>
+                <div class="step-item" id="indicator-2"><div class="step-num">02</div><span>قائمة الموظفين</span></div>
+                <div class="step-item" id="indicator-3"><div class="step-num">03</div><span>تأكيد الصرف</span></div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="card" id="step-1-content">
+                <div class="section-title"><i class="fa-solid fa-store"></i> حدد الفرع المطلوب أو اختر الكل</div>
+                <div class="controls-top">
+                    <button class="btn-select-all" id="selectAllBtn" onclick="toggleSelectAll()"><i class="fa-solid fa-check-double"></i> تحديد كل الفروع</button>
+                    <span id="selectedCountText" style="color: var(--text-muted); font-size: 13px; font-weight: 600;">تم اختيار: 0 فرع</span>
+                </div>
+                <div class="stores-grid" id="storesGrid"></div>
+                <div class="actions-footer" style="justify-content: flex-end;">
+                    <button class="btn-primary" onclick="fetchEmployeesAndProceed()">التالي: عرض الموظفين <i class="fa-solid fa-arrow-left"></i></button>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="card" id="step-2-content" style="display: none;">
+                <div class="section-title"><i class="fa-solid fa-users"></i> قائمة الموظفين المستحقة لهم مستحقات</div>
+                
+                <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <span style="font-size: 13px; color: var(--text-muted);"><i class="fa-solid fa-filter" style="color:var(--accent-orange);"></i> يمكنك استخدام سهم الفلتر 🔽 في عرايس الجدول لتصفية البيانات فوراً مثل الإكسيل.</span>
+                    <button class="btn-select-all" onclick="resetTableFilters()" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-rotate-left"></i> إلغاء كل الفلاتر</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;"><i class="fa-solid fa-square-check"></i> اختيار</th>
+                                <th>
+                                    <i class="fa-solid fa-shop"></i> الفرع
+                                    <select id="filterStore" class="excel-filter-select" onchange="applyExcelFilters()">
+                                        <option value="">-- الكل --</option>
+                                    </select>
+                                </th>
+                                <th><i class="fa-solid fa-id-badge"></i> الكود</th>
+                                <th><i class="fa-solid fa-user"></i> الاسم</th>
+                                <th>
+                                    <i class="fa-solid fa-briefcase"></i> الوظيفة
+                                    <select id="filterJob" class="excel-filter-select" onchange="applyExcelFilters()">
+                                        <option value="">-- الكل --</option>
+                                    </select>
+                                </th>
+                                <th><i class="fa-solid fa-wallet"></i> المبلغ المحجوز</th>
+                                <th>
+                                    <i class="fa-solid fa-circle-info"></i> الحالة
+                                    <select id="filterStatus" class="excel-filter-select" onchange="applyExcelFilters()">
+                                        <option value="">-- الكل --</option>
+                                    </select>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="actions-footer">
+                    <button class="btn-select-all" onclick="goBackToStep1()"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+                    <button class="btn-primary" onclick="submitSelectedEmployees()">تأكيد الطلب وإرسال الإشعار <i class="fa-solid fa-check"></i></button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="card" id="step-3-content" style="display: none;">
+                <div class="alert-box" style="background: var(--card-bg); border: 2px solid var(--accent-orange); border-radius: 12px; padding: 35px 25px; text-align: center;">
+                    <i class="fa-solid fa-circle-check" style="font-size: 45px; color: var(--accent-orange); margin-bottom: 15px;"></i>
+                    <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">تم إرسال طلب صرف المستحقات بنجاح</div>
+                    <div style="font-size: 15px; color: var(--text-muted); margin-bottom: 20px;">سوف يتم المراجعة من الموارد البشرية على أن يتم نزول مستحقات الموظفين مع راتب الشهر الحالي</div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--accent-orange); margin-bottom: 15px;">THANK YOU</div>
+                    <div style="display: inline-block; border-top: 1px dashed var(--accent-orange); border-bottom: 1px dashed var(--accent-orange); padding: 8px 25px;">
+                        <h4 style="font-size: 14px;">HR - IBRAHIM HASSAN</h4>
+                        <span style="font-size: 12px; color: var(--text-muted);">HR GENERALIST</span>
+                    </div>
+                </div>
+                <div class="actions-footer" style="justify-content: center; margin-top: 30px;">
+                    <button class="btn-primary" onclick="resetForm()">إجراء طلب جديد <i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="closed-overlay" id="linkClosedScreen" style="display: none;">
+            <i class="fa-solid fa-lock"></i>
+            <h2>عذراً، نظام التسجيل مغلق حالياً</h2>
+            <p>يرجى مراجعة مواعيد الشفت المحددة من لوحة التحكم (الداشبورد).</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbx_2GvR_YhlwHDKgcMlLU01xXKzfimg0jeOl_ymL4tO-rMZuMfYBzTblcDCTviJ0zsZ/exec";
+
+    let emailsMap = {};
+    let storesList = [];
+    let selectedStoreForAuth = "";
+    let correctOtpGenerated = "";
+    let verifiedUserEmail = "";
+    let employeesCache = {};
+    let currentEmployeesData = [];
+
+    window.onload = async function() {
+        if (localStorage.getItem('ravin_maintenance') === 'true') {
+            document.getElementById('authCard').style.display = 'none';
+            document.getElementById('mainSystemContainer').style.display = 'block';
+            applyScreenState(true);
+            return;
+        }
+
+        try {
+            let res = await fetch(`${API_URL}?action=getEmails`);
+            let data = await res.json();
+            if(data && Object.keys(data).length > 0) {
+                emailsMap = data;
+                storesList = Object.keys(emailsMap).sort();
+            }
+        } catch(e) {}
+
+        buildStoresGrid();
+
+        const select = document.getElementById('authStoreSelect');
+        if(select) {
+            select.innerHTML = '<option value="">-- حدد فرعك --</option>';
+            storesList.forEach(s => {
+                let opt = document.createElement('option');
+                opt.value = s;
+                opt.innerText = s;
+                select.appendChild(opt);
+            });
+        }
+
+        let savedEmail = localStorage.getItem('ravin_verified_email');
+        if(savedEmail) {
+            verifiedUserEmail = savedEmail;
+            document.getElementById('displayUserEmail').innerText = verifiedUserEmail;
+            document.getElementById('userBadgeHeader').style.display = 'inline-flex';
+            document.getElementById('authCard').style.display = 'none';
+            document.getElementById('mainSystemContainer').style.display = 'block';
+            checkLocalStorageTimes();
+        }
+    };
+
+    function toggleTheme() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        document.getElementById('themeIcon').className = next === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+
+    function checkLocalStorageTimes() {
+        let savedOpen = localStorage.getItem('ravin_open_time');
+        let savedClose = localStorage.getItem('ravin_close_time');
+
+        if (savedOpen && savedClose) {
+            document.getElementById('openingDisplay').innerText = new Date(savedOpen).toLocaleString('ar-EG');
+            document.getElementById('closingDisplay').innerText = new Date(savedClose).toLocaleString('ar-EG');
+
+            setInterval(() => {
+                let now = new Date().getTime();
+                let openTime = new Date(savedOpen).getTime();
+                let closeTime = new Date(savedClose).getTime();
+
+                if (now < openTime) {
+                    document.getElementById('countdownClock').innerText = "لم يبدأ موعد فتح اللينك بعد";
+                    applyScreenState(true);
+                } else if (now > closeTime) {
+                    document.getElementById('countdownClock').innerText = "انتهت فترة التسجيل";
+                    applyScreenState(true);
+                } else {
+                    applyScreenState(false);
+                    let timeLeft = closeTime - now;
+                    let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    document.getElementById('countdownClock').innerText = `متبقي على الإغلاق: ${hours}س : ${minutes}د : ${seconds}ث`;
+                }
+            }, 1000);
+        } else {
+            document.getElementById('openingDisplay').innerText = "متاح حالياً";
+            document.getElementById('closingDisplay').innerText = "مفتوح";
+            applyScreenState(false);
+        }
+        buildStoresGrid();
+    }
+
+    function applyScreenState(isClosed) {
+        document.getElementById('portalMainContent').style.display = isClosed ? 'none' : 'block';
+        document.getElementById('timerBanner').style.display = isClosed ? 'none' : 'flex';
+        document.getElementById('linkClosedScreen').style.display = isClosed ? 'block' : 'none';
+    }
+
+    async function requestOtp() {
+        const store = document.getElementById('authStoreSelect').value;
+        if(!store) {
+            alert('برجاء اختيار الفرع أولاً.');
+            return;
+        }
+
+        let targetEmail = emailsMap[store];
+        if(!targetEmail) {
+            alert('عذراً، البريد الإلكتروني لهذا الفرع غير مسجل.');
+            return;
+        }
+
+        selectedStoreForAuth = store;
+        const btn = document.getElementById('sendOtpBtn');
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري إرسال الرمز لـ Outlook...`;
+        btn.disabled = true;
+
+        try {
+            let res = await fetch(`${API_URL}?action=sendOtp&email=${encodeURIComponent(targetEmail)}&store=${store}`);
+            let data = await res.json();
+
+            if(data.status === "success") {
+                correctOtpGenerated = data.generatedOtp;
+                verifiedUserEmail = targetEmail;
+                alert(`تم إرسال رمز التحقق بنجاح إلى: ${targetEmail}`);
+                document.getElementById('otpInputBox').style.display = 'block';
+                btn.style.display = 'none';
+            } else {
+                alert('فشل الإرسال: ' + data.message);
+                btn.innerHTML = `إرسال رمز التحقق (OTP) <i class="fa-solid fa-paper-plane"></i>`;
+                btn.disabled = false;
+            }
+        } catch(err) {
+            alert('خطأ في الاتصال بالسيرفر.');
+            btn.innerHTML = `إرسال رمز التحقق (OTP) <i class="fa-solid fa-paper-plane"></i>`;
+            btn.disabled = false;
+        }
+    }
+
+    function verifyOtp() {
+        const enteredOtp = document.getElementById('otpCodeInput').value.trim();
+        if(enteredOtp === correctOtpGenerated) {
+            localStorage.setItem('ravin_verified_email', verifiedUserEmail);
+
+            document.getElementById('displayUserEmail').innerText = verifiedUserEmail;
+            document.getElementById('userBadgeHeader').style.display = 'inline-flex';
+            document.getElementById('authCard').style.display = 'none';
+            document.getElementById('mainSystemContainer').style.display = 'block';
+            checkLocalStorageTimes();
+        } else {
+            alert('رمز التحقق غير صحيح، برجاء المحاولة مرة أخرى.');
+        }
+    }
+
+    const storesGrid = document.getElementById('storesGrid');
+    let selectedStores = [];
+
+    function buildStoresGrid() {
+        if(!storesGrid) return;
+        storesGrid.innerHTML = '';
+        storesList.forEach(store => {
+            const card = document.createElement('div');
+            card.className = 'store-card';
+            card.innerHTML = `<i class="fa-solid fa-shop"></i><span>${store}</span>`;
+            card.onclick = () => {
+                if(selectedStores.includes(store)) {
+                    selectedStores = selectedStores.filter(s => s !== store);
+                    card.classList.remove('selected');
+                } else {
+                    selectedStores.push(store);
+                    card.classList.add('selected');
+                }
+                document.getElementById('selectedCountText').innerText = `تم اختيار: ${selectedStores.length} فرع`;
+            };
+            storesGrid.appendChild(card);
+        });
+    }
+
+    function toggleSelectAll() {
+        const cards = document.querySelectorAll('.store-card');
+        if (selectedStores.length === storesList.length) {
+            selectedStores = [];
+            cards.forEach(c => c.classList.remove('selected'));
+        } else {
+            selectedStores = [...storesList];
+            cards.forEach(c => c.classList.add('selected'));
+        }
+        document.getElementById('selectedCountText').innerText = `تم اختيار: ${selectedStores.length} فرع`;
+    }
+
+    async function fetchEmployeesAndProceed() {
+        if (selectedStores.length === 0) {
+            alert('برجاء اختيار فرع واحد على الأقل.');
+            return;
+        }
+
+        const tbody = document.getElementById('employeesTableBody');
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;"><i class="fa-solid fa-bolt fa-spin" style="color:var(--accent-orange);"></i> ⚡ جاري جلب البيانات بأقصى سرعة...</td></tr>`;
+
+        document.getElementById('step-1-content').style.display = 'none';
+        document.getElementById('step-2-content').style.display = 'block';
+        document.getElementById('indicator-1').classList.remove('active');
+        document.getElementById('indicator-2').classList.add('active');
+
+        try {
+            let promises = selectedStores.map(async store => {
+                if (employeesCache[store]) return employeesCache[store];
+                let res = await fetch(`${API_URL}?action=getEmployees&store=${store}`);
+                let data = await res.json();
+                employeesCache[store] = data;
+                return data;
+            });
+
+            let results = await Promise.all(promises);
+            currentEmployeesData = [].concat(...results);
+
+            populateExcelFilters(currentEmployeesData);
+            renderEmployeesTable(currentEmployeesData);
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: red;">خطأ في الاتصال بقاعدة البيانات.</td></tr>`;
+        }
+    }
+
+    function populateExcelFilters(dataList) {
+        let stores = [...new Set(dataList.map(item => item.store))].sort();
+        let jobs = [...new Set(dataList.map(item => item.job))].sort();
+        let statuses = [...new Set(dataList.map(item => item.status))].sort();
+
+        fillSelectOptions('filterStore', stores);
+        fillSelectOptions('filterJob', jobs);
+        fillSelectOptions('filterStatus', statuses);
+    }
+
+    function fillSelectOptions(elementId, arr) {
+        let select = document.getElementById(elementId);
+        let currentVal = select.value;
+        select.innerHTML = '<option value="">-- الكل --</option>';
+        arr.forEach(val => {
+            if(val) {
+                let opt = document.createElement('option');
+                opt.value = val;
+                opt.innerText = val;
+                select.appendChild(opt);
+            }
+        });
+        select.value = currentVal;
+    }
+
+    function applyExcelFilters() {
+        let storeVal = document.getElementById('filterStore').value;
+        let jobVal = document.getElementById('filterJob').value;
+        let statusVal = document.getElementById('filterStatus').value;
+
+        let filtered = currentEmployeesData.filter(emp => {
+            let matchStore = !storeVal || emp.store === storeVal;
+            let matchJob = !jobVal || emp.job === jobVal;
+            let matchStatus = !statusVal || emp.status === statusVal;
+            return matchStore && matchJob && matchStatus;
+        });
+
+        renderEmployeesTable(filtered);
+    }
+
+    function resetTableFilters() {
+        document.getElementById('filterStore').value = "";
+        document.getElementById('filterJob').value = "";
+        document.getElementById('filterStatus').value = "";
+        renderEmployeesTable(currentEmployeesData);
+    }
+
+    function renderEmployeesTable(dataList) {
+        const tbody = document.getElementById('employeesTableBody');
+        tbody.innerHTML = '';
+        if (dataList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">لا توجد بيانات مطابقة لفلتر البحث.</td></tr>`;
+            return;
+        }
+
+        dataList.forEach((emp, index) => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="checkbox" class="emp-checkbox" data-emp='${JSON.stringify(emp)}' value="${index}"></td>
+                <td><strong style="color:var(--accent-orange);">${emp.store}</strong></td>
+                <td>${emp.code}</td>
+                <td>${emp.name}</td>
+                <td>${emp.job}</td>
+                <td>${emp.amount} ج.م</td>
+                <td><span style="color: var(--accent-orange); font-weight: 700;">${emp.status}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function goBackToStep1() {
+        document.getElementById('step-2-content').style.display = 'none';
+        document.getElementById('step-1-content').style.display = 'block';
+        document.getElementById('indicator-2').classList.remove('active');
+        document.getElementById('indicator-1').classList.add('active');
+    }
+
+    async function submitSelectedEmployees() {
+        const checked = document.querySelectorAll('.emp-checkbox:checked');
+        if (checked.length === 0) {
+            alert('برجاء اختيار موظف واحد على الأقل.');
+            return;
+        }
+
+        let employeesToSubmit = [];
+        checked.forEach(box => {
+            employeesToSubmit.push(JSON.parse(box.getAttribute('data-emp')));
+        });
+
+        const payload = {
+            userEmail: verifiedUserEmail,
+            store: selectedStores.join(', '),
+            employees: employeesToSubmit
+        };
+
+        try {
+            let response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            let result = await response.json();
+            
+            if (result.status === "success") {
+                document.getElementById('step-2-content').style.display = 'none';
+                document.getElementById('step-3-content').style.display = 'block';
+                document.getElementById('indicator-2').classList.remove('active');
+                document.getElementById('indicator-3').classList.add('active');
+            } else {
+                alert('حدث خطأ أثناء الحفظ: ' + result.message);
+            }
+        } catch (err) {
+            alert('خطأ في إرسال الطلب للسيرفر.');
+        }
+    }
+
+    function resetForm() {
+        selectedStores = [];
+        document.querySelectorAll('.store-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('step-3-content').style.display = 'none';
+        document.getElementById('step-1-content').style.display = 'block';
+        document.getElementById('indicator-3').classList.remove('active');
+        document.getElementById('indicator-1').classList.add('active');
+        document.getElementById('selectedCountText').innerText = `تم اختيار: 0 فرع`;
+    }
+</script>
+
+</body>
+</html>
